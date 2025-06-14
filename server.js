@@ -16,18 +16,28 @@ app.use(cors());
 app.use(express.json());
 
 // Database connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+    console.error('❌ MONGODB_URI is not defined in environment variables');
+    process.exit(1);
+}
 
 // Connect to MongoDB with better error handling
 const connectDB = async () => {
-    console.log('Connecting to MongoDB...');
+    console.log('🔌 Connecting to MongoDB...');
     try {
         await mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+            serverSelectionTimeoutMS: 10000, // Increased to 10 seconds
+            socketTimeoutMS: 60000, // Increased to 60 seconds
+            connectTimeoutMS: 10000, // Added connection timeout
+            maxPoolSize: 10, // Maximum number of connections in the connection pool
+            retryWrites: true,
+            w: 'majority'
         });
+        console.log('✅ MongoDB connected successfully');
         
         console.log('✅ MongoDB connected successfully');
         
