@@ -11,9 +11,32 @@ const certificationRoutes = require('./routes/certificationRoutes');
 // Initialize express
 const app = express();
 
+// CORS configuration
+const allowedOrigins = [
+  'https://data-analysis-portfolio-client.vercel.app',
+  'http://localhost:3000', // For local development
+  'http://localhost:5173'  // Vite default port
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Database connection
 const MONGODB_URI = process.env.MONGODB_URI;
