@@ -1,22 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const {
-    getSkills,
-    getSkillById,
-    createSkill,
-    updateSkill,
-    deleteSkill
+  getSkills,
+  getSkillById,
+  createSkill,
+  updateSkill,
+  deleteSkill
 } = require('../controllers/skillController');
-const { protect, admin } = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/auth');
 
-// Routes
+// Apply authentication to all routes
+router.use(authenticate);
+
+// All routes now require authentication
 router.route('/')
-    .get(getSkills)
-    .post(createSkill);
+  .get(getSkills)
+  .post(createSkill);
 
 router.route('/:id')
-    .get(getSkillById)
-    .put(updateSkill)
-    .delete(deleteSkill);
+  .get(getSkillById)
+  .put(updateSkill)
+  .delete(deleteSkill);
 
 module.exports = router;

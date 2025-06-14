@@ -6,6 +6,7 @@ const cors = require('cors');
 // Import routes
 const projectRoutes = require('./routes/projects');
 const skillRoutes = require('./routes/skills');
+const certificationRoutes = require('./routes/certificationRoutes');
 
 // Initialize express
 const app = express();
@@ -53,6 +54,7 @@ const connectDB = async () => {
 // Routes
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
+app.use('/api/certifications', certificationRoutes);
 
 // Simple route for testing
 app.get('/', (req, res) => {

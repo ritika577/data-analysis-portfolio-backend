@@ -1,19 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const projectController = require('../controllers/projectController');
+const { authenticate } = require('../middleware/auth');
 
-// CRUD routes for projects
+// Apply authentication to all routes
+router.use(authenticate);
+
+// All routes now require authentication
 router.route('/')
-    .get(projectController.getProjects)    // Get all projects with optional filtering
-    .post(projectController.createProject); // Create a new project
+  .get(projectController.getProjects)
+  .post(projectController.createProject);
 
-// Search route
+// Search route (requires authentication)
 router.get('/search/:keyword', projectController.searchProjects);
 
-// Single project operations
+// Single project operations (all require authentication)
 router.route('/:id')
-    .get(projectController.getProjectById)     // Get single project
-    .put(projectController.updateProject)      // Update project
-    .delete(projectController.deleteProject);  // Delete project
+  .get(projectController.getProjectById)
+  .put(projectController.updateProject)
+  .delete(projectController.deleteProject);
 
 module.exports = router;
